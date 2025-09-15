@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { styles } from './tic-tac-toe-cell.css.js';
+import { colorTokens } from '../../tokens.css.js';
 
 /**
  * A cell in a Tic Tac Toe board.
@@ -36,15 +37,30 @@ export class TicTacToeCell extends LitElement {
         type: String,
         attribute: 'cell-value'
     },
+    /**
+     * Whether to highlight the cell (e.g., if it's part of a winning combination).
+     * @type {Boolean}
+     * @default false
+     */
+    highlight: {
+      type: Boolean,
+      reflect: true
+    }
   };
 
-  static styles = styles;
+  static get styles() {
+    return [
+      colorTokens,
+      styles
+    ];
+  }
 
   constructor() {
     super();
     this.cellValue = '';
     this.cellRow = 0;
     this.cellCol = 0;
+    this.highlight = false;
   }
 
   _handleClick() {
@@ -63,7 +79,7 @@ export class TicTacToeCell extends LitElement {
     return html`
       <button
         aria-label="Tic Tac Toe Cell, Row ${this.cellRow}, Col ${this.cellCol}: value ${this.cellValue || 'empty'}"
-        class="cell-container"
+        class="cell-button"
         @click=${this._handleClick}
         ?disabled=${this.cellValue !== ''}
       >
