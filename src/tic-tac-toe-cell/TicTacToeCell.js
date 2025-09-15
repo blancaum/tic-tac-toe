@@ -10,13 +10,22 @@ import { styles } from './tic-tac-toe-cell.css.js';
 export class TicTacToeCell extends LitElement {
   static properties = {
     /**
-     * The index of the cell in the board. It is an array of two numbers [row, col].
-     * @type {Array}
-     * @default []
+     * The row of the cell in the board. It is a number representing the row index.
+     * @type {Number}
+     * @default 0
      */
-    cellIndex: { 
-        type: Array,
-        attribute: 'cell-index'
+    cellRow: { 
+        type: Number,
+        attribute: 'cell-row'
+    },
+    /**
+     * The column of the cell in the board. It is a number representing the column index.
+     * @type {Number}
+     * @default 0
+     */
+    cellCol: { 
+        type: Number,
+        attribute: 'cell-col'
     },
     /**
      * The value of the cell. It can be 'X', 'O', or ''.
@@ -33,29 +42,16 @@ export class TicTacToeCell extends LitElement {
 
   constructor() {
     super();
-    this.value = '';
-    this.index = [];
+    this.cellValue = '';
+    this.cellRow = 0;
+    this.cellCol = 0;
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.addEventListener('contextmenu', e => e.preventDefault());
-  }
-
-  _handleMouseDown(e) {
-    e.preventDefault();
-    let value = '';
-    if (e.button === 0) {
-      value = 'X';
-    } else if (e.button === 2) {
-      value = 'O';
-    } else {
-      return;
-    }
+  _handleClick() {
     const event = new CustomEvent('cell-click', {
       detail: { 
-        index: this.index, 
-        value
+        row: this.cellRow,
+        col: this.cellCol
       },
       bubbles: true,
       composed: true
@@ -64,7 +60,15 @@ export class TicTacToeCell extends LitElement {
   }
 
   render() {
-    return html`<button @mousedown=${this._handleMouseDown}>${this.value}</button>`;
+    return html`
+      <button
+        aria-label="Tic Tac Toe Cell, Row ${this.cellRow}, Col ${this.cellCol}: value ${this.cellValue || 'empty'}"
+        class="cell-container"
+        @click=${this._handleClick}
+        ?disabled=${this.cellValue !== ''}
+      >
+      </button>
+    `;
   }
 }
 
