@@ -38,10 +38,10 @@ Open your browser at http://localhost:5173
 
 Import the component in your HTML:
 
-´´´
+```
 <script type="module" src="./src/TicTacToe.js"></script>
 <tic-tac-toe></tic-tac-toe>
-´´´
+```
 
 ## 💡 How it Works
 
