@@ -18,6 +18,8 @@ Reset game button 🔁
 
 Fully encapsulated Web Components with Lit 3
 
+Accessible via keyboard and screen reader
+
 ## 🧩 Components
 
 <tic-tac-toe> - Main game board, handles game state, turn logic, and winner detection.
