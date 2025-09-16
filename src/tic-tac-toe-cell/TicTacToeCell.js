@@ -4,8 +4,9 @@ import { colorTokens } from '../../tokens.css.js';
 
 /**
  * A cell in a Tic Tac Toe board.
- *
- * @slot - This element has a slot
+ * It can be empty, 'X', or 'O', and can be highlighted if part of a winning combination.
+ * It is clickable unless it is read-only or already has a value.
+ * It is accessible with appropriate aria-labels.
  */
 
 export class TicTacToeCell extends LitElement {
@@ -20,15 +21,6 @@ export class TicTacToeCell extends LitElement {
       attribute: 'cell-aria-label'
     },
     /**
-     * The column of the cell in the board. It is a number representing the column index.
-     * @type {Number}
-     * @default 0
-     */
-    cellCol: { 
-        type: Number,
-        attribute: 'cell-col'
-    },
-    /**
      * Whether the cell is read-only (not clickable but readable by screen readers).
      * @type {Boolean}
      * @default false
@@ -36,15 +28,6 @@ export class TicTacToeCell extends LitElement {
     cellReadOnly: {
       type: Boolean,
       attribute: 'cell-read-only'
-    },
-    /**
-     * The row of the cell in the board. It is a number representing the row index.
-     * @type {Number}
-     * @default 0
-     */
-    cellRow: { 
-        type: Number,
-        attribute: 'cell-row'
     },
     /**
      * The value of the cell. It can be 'X', 'O', or ''.
@@ -76,9 +59,7 @@ export class TicTacToeCell extends LitElement {
   constructor() {
     super();
     this.cellAriaLabel = '';
-    this.cellCol = 0;
     this.cellReadOnly = false;
-    this.cellRow = 0;
     this.cellValue = '';
     this.highlight = false;
   }
@@ -86,8 +67,7 @@ export class TicTacToeCell extends LitElement {
   _handleClick() {
     const event = new CustomEvent('cell-click', {
       detail: { 
-        row: this.cellRow,
-        col: this.cellCol
+        value: this.cellValue
       },
       bubbles: true,
       composed: true

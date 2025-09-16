@@ -5,6 +5,9 @@ import { colorTokens } from '../tokens.css.js';
 
 /**
  * Main Tic Tac Toe board component.
+ * It manages the game state, including the board, current player, and winner.
+ * It renders the board using TicTacToeCell components and provides a reset button.
+ * It is accessible with appropriate aria-labels and announces the game status.
  */
 export class TicTacToe extends LitElement {
   static properties = {
@@ -70,40 +73,40 @@ export class TicTacToe extends LitElement {
   }
 
   checkWinner() {
-  const b = this.board;
+    const b = this.board;
 
-  for (let i = 0; i < 3; i++) {
-    if (b[i][0] && b[i][0] === b[i][1] && b[i][0] === b[i][2]) {
-      this._winner = b[i][0];
-      this._winningCells = [[i, 0], [i, 1], [i, 2]];
+    for (let i = 0; i < 3; i++) {
+      if (b[i][0] && b[i][0] === b[i][1] && b[i][0] === b[i][2]) {
+        this._winner = b[i][0];
+        this._winningCells = [[i, 0], [i, 1], [i, 2]];
+        return;
+      }
+    }
+
+    for (let i = 0; i < 3; i++) {
+      if (b[0][i] && b[0][i] === b[1][i] && b[0][i] === b[2][i]) {
+        this._winner = b[0][i];
+        this._winningCells = [[0, i], [1, i], [2, i]];
+        return;
+      }
+    }
+
+    if (b[0][0] && b[0][0] === b[1][1] && b[0][0] === b[2][2]) {
+      this._winner = b[0][0];
+      this._winningCells = [[0, 0], [1, 1], [2, 2]];
       return;
     }
-  }
 
-  for (let i = 0; i < 3; i++) {
-    if (b[0][i] && b[0][i] === b[1][i] && b[0][i] === b[2][i]) {
-      this._winner = b[0][i];
-      this._winningCells = [[0, i], [1, i], [2, i]];
+    if (b[0][2] && b[0][2] === b[1][1] && b[0][2] === b[2][0]) {
+      this._winner = b[0][2];
+      this._winningCells = [[0, 2], [1, 1], [2, 0]];
       return;
     }
-  }
 
-  if (b[0][0] && b[0][0] === b[1][1] && b[0][0] === b[2][2]) {
-    this._winner = b[0][0];
-    this._winningCells = [[0, 0], [1, 1], [2, 2]];
-    return;
-  }
-
-  if (b[0][2] && b[0][2] === b[1][1] && b[0][2] === b[2][0]) {
-    this._winner = b[0][2];
-    this._winningCells = [[0, 2], [1, 1], [2, 0]];
-    return;
-  }
-
-  const isTie = b.flat().every(cell => cell !== '');
-  if (isTie) {
-    this._winner = 'Tie';
-  }
+    const isTie = b.flat().every(cell => cell !== '');
+    if (isTie) {
+      this._winner = 'Tie';
+    }
 }
 
   resetGame() {
@@ -130,8 +133,6 @@ export class TicTacToe extends LitElement {
               <tic-tac-toe-cell
                 ?highlight=${this._partOfWinningLine(rowIndex, colIndex)}
                 cell-value=${cell}
-                cell-row=${rowIndex}
-                cell-col=${colIndex}
                 cell-aria-label=${this._ariaLabel(rowIndex, colIndex, cell)}
                 @cell-click=${() => this._handleCellClick(rowIndex, colIndex)}
                 cell-read-only=${cell !== '' || this._winner !== ''}
