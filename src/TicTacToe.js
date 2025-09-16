@@ -117,17 +117,24 @@ export class TicTacToe extends LitElement {
     this._winningCells = [];
   }
 
+  _ariaLabel(rowIndex, colIndex, cell) {
+    const partOfWinningLine = this._partOfWinningLine(rowIndex, colIndex);
+    return `Tic Tac Toe Cell, Row ${rowIndex}, Col ${colIndex}: value ${cell || 'empty'}, winner: ${this._winner || 'none'}, ${partOfWinningLine ? ', part of winning line' : ''}`;
+  }
+
   get _boardTpl(){
     return html`
     ${this.board.map((row, rowIndex) => html`
           <div class="row">
             ${row.map((cell, colIndex) => html`
               <tic-tac-toe-cell
-                ?highlight=${this._winningCells.some(([r, c]) => r === rowIndex && c === colIndex)}
+                ?highlight=${this._partOfWinningLine(rowIndex, colIndex)}
                 cell-value=${cell}
                 cell-row=${rowIndex}
                 cell-col=${colIndex}
+                cell-aria-label=${this._ariaLabel(rowIndex, colIndex, cell)}
                 @cell-click=${() => this._handleCellClick(rowIndex, colIndex)}
+                cell-read-only=${cell !== '' || this._winner !== ''}
               ></tic-tac-toe-cell>
             `)}
           </div>
@@ -141,6 +148,10 @@ export class TicTacToe extends LitElement {
       this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
       this.requestUpdate();
     }
+  }
+
+  _partOfWinningLine(rowIndex, colIndex) {
+    return this._winningCells.some(([r, c]) => r === rowIndex && c === colIndex);
   }
 
   get _statusTpl() {
